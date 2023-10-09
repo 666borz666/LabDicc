@@ -1,0 +1,23 @@
++Indice: nombre que yo quiera, ya no son números
++llave:valor
++La llave tiene que ser única, es la manera de reconocer el valor
+*********
+["lunes"]="Intro taller"	
+   llave : valor
+*********
++La compu ordena el diccionario de forma de que se puedan entregar los valores más rápido
+*********
++Siempre tienen que ser parejas para operar con diccionarios
+*********
++Crear
+dicc={}
+La llave no debe existir, si existe una llav, se sustituye
+*********
+dic_nl[1]="uno"
+dic_nl[2]="dos"
+dic_nl={1:"uno",2:"dos"}
+*********
+List=[("edad",18),("año",2005)]
+dicc={edad:18,año:2005}
+
+
