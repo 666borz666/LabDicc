@@ -6,6 +6,7 @@
 diccDent={}
 #Importacion
 import pickle
+from datetime import datetime
 #Definicion de funciones
 def graba(nomArchGrabar,lista):
     try:
@@ -34,6 +35,25 @@ def agregarPaciente(diccDent):
         apellido2 = input("Ingrese su Segundo apellido: ")
         obs = (input("Observación: "))
         datos = [(nom, apellido1, apellido2), (obs)]
+        genero = None
+        while genero not in ["1", "2"]:
+            print("Seleccione su género:")
+            print("1 - Masculino")
+            print("2 - Femenino")
+            genero = input("Opción: ")
+        genero = genero == "1"
+        estado = None
+        while estado not in ["1", "2"]:
+            print("Seleccione el estado del paciente:")
+            print("1 - Activo")
+            print("2 - Inactivo")
+            estado = input("Opción: ")
+        estado = estado == "1"
+        nacimiento=input("Ingrese su fecha de nacimiento (dd/mm/aaaa): ")
+        fechaHoy=datetime.now()
+        nacimiento=datetime.strptime(nacimiento,"%d/%m/%Y")
+        edad=fechaHoy.year-nacimiento.year-((fechaHoy.month,fechaHoy.day)<(nacimiento.month,nacimiento.day))
+        datos = [(nom, apellido1, apellido2), (obs), genero, estado, nacimiento, edad]
     except ValueError:
         print("Ingrese un valor válido")
         return
@@ -76,11 +96,46 @@ def mostrarPaciente(diccDent,ced):
         print("Primer apellido:",(infoPaciente[0][1]))
         print("Segundo apellido:",(infoPaciente[0][2]))
         print ("Observación:",infoPaciente[1])
+        print("Género:", infoPaciente[2])
+        print("Estado:", infoPaciente[3])
+        print("Fecha de nacimiento:", infoPaciente[4])
+        print("Edad:", infoPaciente[5])
         print ("-------------------")
     except KeyError:
         print("El paciente no existe.")
     return
+def cambiarEstadoPaciente(diccDent, ced):
+    if ced in diccDent:
+        paciente = diccDent[ced]
+        estadoActual = paciente[4]
+        nuevoEstado = not estadoActual
+        diccDent[ced][4] = nuevoEstado
+        print(f"El estado del paciente con cédula {ced} ha sido cambiado a {'Activo' if nuevoEstado else 'Inactivo'}.")
+    else:
+        print("Cédula no encontrada en la base de datos.")
+def mostrarPacientesActivos(diccDent):
+    print("Pacientes Activos:")
+    for ced, datos in diccDent.items():
+        if datos[3]:  # Suponiendo que el estado activo/inactivo está en la posición 3 de la lista
+            print("Cédula:", ced)
+            print("Nombre:", datos[0][0])
+            print("Primer apellido:", datos[0][1])
+            print("Segundo apellido:", datos[0][2])
+            print("Género:", "Masculino" if datos[2] else "Femenino")
+            print("Observación:", datos[1])
+            print("-------------------")
 
+def mostrarPacientesInactivos(diccDent):
+    print("Pacientes Inactivos:")
+    for ced, datos in diccDent.items():
+        if not datos[3]:  # Suponiendo que el estado activo/inactivo está en la posición 3 de la lista
+            print("Cédula:", ced)
+            print("Nombre:", datos[0][0])
+            print("Primer apellido:", datos[0][1])
+            print("Segundo apellido:", datos[0][2])
+            print("Género:", "Masculino" if datos[2] else "Femenino")
+            print("Observación:", datos[1])
+            print("-------------------")
 def menu():
     diccDent=lee("clinica")
     while True:
@@ -91,7 +146,8 @@ def menu():
             print("2-Actualizar paciente.")
             print("3-Eliminar paciente.")
             print("4-Mostrar paciente.")
-            print("5-Salir")
+            print("5-Cambiar estado del paciente.")
+            print("6-Salir")
             print("*************************************************")
             opcion = int(input("Opción: "))
             print()
@@ -107,6 +163,13 @@ def menu():
                 ced = input("Indique la cedula a mostrar: ")
                 mostrarPaciente(diccDent,ced)
             elif opcion == 5:
+                ced = input("Indique la cedula a cambiar el estado: ")
+                cambiarEstadoPaciente(diccDent, ced)
+            elif opcion == 6:
+                mostrarPacientesActivos(diccDent)
+            elif opcion == 7:
+                mostrarPacientesInactivos(diccDent)
+            elif opcion == 8:
                 graba("clinica.txt",diccDent)
                 break
         except ValueError:
