@@ -1,4 +1,4 @@
-#Elaborado por: Ignacio Garcia y Daniel Campos
+#Elaborado por: Alejandro Madrigal y Daniel Campos
 #Fecha de Creación: 02/10/2023 9:00am
 #Última modificación: 02/10/2023 10:35am
 #Versión:3.11.3
@@ -34,7 +34,6 @@ def agregarPaciente(diccDent):
         apellido1 = input("Ingrese su Primer apellido: ")
         apellido2 = input("Ingrese su Segundo apellido: ")
         obs = (input("Observación: "))
-        datos = [(nom, apellido1, apellido2), (obs)]
         genero = None
         while genero not in ["1", "2"]:
             print("Seleccione su género:")
@@ -74,8 +73,10 @@ def actualizarPaciente(diccDent,ced):
             diccDent[ced][1] = observacion
             print("La observación se ha actualizado con éxito")
             graba("clinica.txt",diccDent)
+            return diccDent
         elif confirmacion == 2:
             print("La observación no se ha actualizado")
+            return diccDent
 
 def eliminarPaciente(diccDent,ced):
     try:
@@ -104,6 +105,7 @@ def mostrarPaciente(diccDent,ced):
     except KeyError:
         print("El paciente no existe.")
     return
+
 def cambiarEstadoPaciente(diccDent, ced):
     if ced in diccDent:
         paciente = diccDent[ced]
@@ -111,8 +113,11 @@ def cambiarEstadoPaciente(diccDent, ced):
         nuevoEstado = not estadoActual
         diccDent[ced][4] = nuevoEstado
         print(f"El estado del paciente con cédula {ced} ha sido cambiado a {'Activo' if nuevoEstado else 'Inactivo'}.")
+        return
     else:
         print("Cédula no encontrada en la base de datos.")
+        return
+    
 def mostrarPacientesActivos(diccDent):
     print("Pacientes Activos:")
     for ced, datos in diccDent.items():
@@ -166,10 +171,7 @@ def menu():
                 ced = input("Indique la cedula a cambiar el estado: ")
                 cambiarEstadoPaciente(diccDent, ced)
             elif opcion == 6:
-                mostrarPacientesActivos(diccDent)
-            elif opcion == 7:
-                mostrarPacientesInactivos(diccDent)
-            elif opcion == 8:
+                print("¡Gracias por utilizar el sistema!")
                 graba("clinica.txt",diccDent)
                 break
         except ValueError:
